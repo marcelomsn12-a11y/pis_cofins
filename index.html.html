@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conferência PIS e COFINS</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --bg: #f8fafc;
+      --card: #fff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .card-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--primary-light);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    input, select, textarea {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--card);
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover { background: var(--primary-light); }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+
+    .btn-remove {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn-remove:hover { background: #fecaca; }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .kpi {
+      background: var(--bg);
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .kpi-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .kpi.success .kpi-value { color: var(--success); }
+    .kpi.warning .kpi-value { color: var(--warning); }
+
+    .aliquota-box {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .aliquota {
+      background: var(--primary-light);
+      border: 1px solid var(--primary);
+      padding: 12px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+
+    .aliquota-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .aliquota-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--bg);
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .text-right { text-align: right; }
+
+    .creditos-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid var(--border);
+    }
+
+    .credito-item {
+      display: grid;
+      grid-template-columns: 1fr 150px 50px;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+
+    .info-box {
+      background: var(--warning-light);
+      border: 1px solid var(--warning);
+      color: #92400e;
+      padding: 12px;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      margin-top: 16px;
+    }
+
+    .info-box.success {
+      background: var(--success-light);
+      border-color: var(--success);
+      color: #065f46;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .aliquota-box { grid-template-columns: 1fr; }
+      .credito-item { grid-template-columns: 1fr; }
+      h1 { font-size: 1.4rem; }
+      .actions { flex-direction: column; }
+      button { width: 100%; }
+    }
+
+    @media print {
+      .actions { display: none; }
+      .card { box-shadow: none; border: none; }
+      header { margin-bottom: 20px; }
+      h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Conferência PIS e COFINS</h1>
+      <p class="subtitle">Cálculo com regime cumulativo ou não cumulativo</p>
+    </header>
+
+    <div class="grid">
+      <!-- PAINEL DE ENTRADA -->
+      <div class="card">
+        <div class="card-header">Parâmetros da Apuração</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Regime</label>
+            <select id="regime">
+              <option value="cumulativo">Cumulativo (0,65% PIS, 3% COFINS)</option>
+              <option value="naoCumulativo">Não Cumulativo (1,65% PIS, 7,6% COFINS)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Referência</label>
+            <input type="text" id="referencia" placeholder="Ex: mar/2024">
+          </div>
+
+          <div class="field full">
+            <label>Receita Bruta Tributável</label>
+            <input type="number" id="receitaBruta" placeholder="0.00" min="0" step="0.01">
+          </div>
+
+          <div class="field">
+            <label>Exclusões da Base</label>
+            <input type="number" id="exclusoesBase" placeholder="0.00" min="0" step="0.01" value="0">
+          </div>
+
+          <div class="field">
+            <label>Alíquota PIS (%)</label>
+            <input type="number" id="aliquotaPis" value="0.65" min="0" step="0.01">
+          </div>
+
+          <div class="field">
+            <label>Alíquota COFINS (%)</label>
+            <input type="number" id="aliquotaCofins" value="3" min="0" step="0.01">
+          </div>
+        </div>
+
+        <!-- Alíquotas em destaque -->
+        <div class="aliquota-box">
+          <div class="aliquota">
+            <div class="aliquota-label">Alíquota PIS</div>
+            <div class="aliquota-value" id="destaquePis">0,65%</div>
+          </div>
+          <div class="aliquota">
+            <div class="aliquota-label">Alíquota COFINS</div>
+            <div class="aliquota-value" id="destaqueCofins">3,00%</div>
+          </div>
+        </div>
+
+        <!-- Seção de Créditos -->
+        <div id="creditosSection" class="creditos-section hidden">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <label style="margin: 0;">Créditos sobre operações</label>
+          </div>
+          <div id="creditosLista"></div>
+          <div class="credito-item">
+            <input type="text" id="creditoDescricao" placeholder="Descrição do crédito">
+            <input type="number" id="creditoValor" placeholder="0.00" min="0" step="0.01">
+            <button class="btn-secondary btn-sm" id="btnAddCredito">+</button>
+          </div>
+        </div>
+
+        <div class="field full" style="margin-top: 16px;">
+          <label>Observações</label>
+          <textarea id="observacoes" placeholder="Anotações da conferência..."></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" id="btnCalcular">Calcular</button>
+          <button class="btn-secondary" id="btnLimpar">Limpar</button>
+          <button class="btn-secondary" id="btnExcel">Exportar CSV</button>
+          <button class="btn-secondary" id="btnPdf">Imprimir</button>
+        </div>
+      </div>
+
+      <!-- PAINEL DE RESULTADOS -->
+      <div class="card">
+        <div class="card-header">Resultado da Apuração</div>
+
+        <div class="summary-grid">
+          <div class="kpi">
+            <div class="kpi-label">Referência</div>
+            <div class="kpi-value" id="kpiReferencia" style="font-size: 0.95rem;">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Regime</div>
+            <div class="kpi-value" id="kpiRegime" style="font-size: 0.95rem;">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Receita Bruta</div>
+            <div class="kpi-value" id="resReceitaBruta">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Base de Cálculo</div>
+            <div class="kpi-value" id="resBase">-</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border);">
+          <div class="summary-grid">
+            <div class="kpi success">
+              <div class="kpi-label">PIS</div>
+              <div class="kpi-value" id="resPis">-</div>
+            </div>
+            <div class="kpi success">
+              <div class="kpi-label">COFINS</div>
+              <div class="kpi-value" id="resCofins">-</div>
+            </div>
+            <div class="kpi warning">
+              <div class="kpi-label">Total</div>
+              <div class="kpi-value" id="resTotal">-</div>
+            </div>
+            <div class="kpi" id="creditosKpi" class="hidden">
+              <div class="kpi-label">Créditos</div>
+              <div class="kpi-value" id="resCreditos">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top: 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Tributo</th>
+                <th class="text-right">Base</th>
+                <th class="text-right">Alíquota</th>
+                <th class="text-right">Créditos</th>
+                <th class="text-right">A Recolher</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PIS</td>
+                <td class="text-right" id="basePisTabela">-</td>
+                <td class="text-right" id="aliqPisTabela">-</td>
+                <td class="text-right" id="creditoPisTabela">-</td>
+                <td class="text-right" id="valorPisTabela">-</td>
+              </tr>
+              <tr>
+                <td>COFINS</td>
+                <td class="text-right" id="baseCofinsTabela">-</td>
+                <td class="text-right" id="aliqCofinsTabela">-</td>
+                <td class="text-right" id="creditoCofinsTabela">-</td>
+                <td class="text-right" id="valorCofinsTabela">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-box" id="mensagemRegras"></div>
+      </div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="card" style="margin-top: 24px;">
+      <h3 style="margin-top: 0; margin-bottom: 12px;">Observações Registradas</h3>
+      <div class="info-box success">
+        <p id="saidaObservacoes" style="margin: 0;">Nenhuma observação informada.</p>
+      </div>
+      <div class="info-box" style="margin-top: 16px;">
+        Ferramenta de apoio para conferência. Considere receitas monofásicas, substituição tributária, alíquota zero, isenções e demais particularidades fiscais aplicáveis.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const el = id => document.getElementById(id);
+
+    // Formatar moeda
+    const fmt = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
+    const pct = (v) => (Number(v) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+    const num = (inp) => parseFloat(inp.value) || 0;
+
+    let creditos = [];
+
+    // Renderizar créditos
+    const renderCreditos = () => {
+      el('creditosLista').innerHTML = '';
+      creditos.forEach((c, idx) => {
+        const div = document.createElement('div');
+        div.className = 'credito-item';
+        div.innerHTML = `
+          <input type="text" value="${c.descricao}" data-idx="${idx}" data-campo="descricao" placeholder="Descrição">
+          <input type="number" value="${c.valor}" min="0" step="0.01" data-idx="${idx}" data-campo="valor" placeholder="0.00">
+          <button class="btn-remove btn-sm" data-remove="${idx}">×</button>
+        `;
+        el('creditosLista').appendChild(div);
+      });
+
+      el('creditosLista').querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+          const idx = Number(e.target.dataset.idx);
+          const campo = e.target.dataset.campo;
+          creditos[idx][campo] = campo === 'valor' ? Number(e.target.value || 0) : e.target.value;
+          calcular();
+        });
+      });
+
+      el('creditosLista').querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          creditos.splice(Number(e.target.dataset.remove), 1);
+          renderCreditos();
+          calcular();
+        });
+      });
+    };
+
+    // Atualizar regime
+    const updateRegime = () => {
+      const regime = el('regime').value;
+      if (regime === 'cumulativo') {
+        el('aliquotaPis').value = '0.65';
+        el('aliquotaCofins').value = '3';
+        el('creditosSection').classList.add('hidden');
+        el('creditosKpi').classList.add('hidden');
+      } else {
+        el('aliquotaPis').value = '1.65';
+        el('aliquotaCofins').value = '7.6';
+        el('creditosSection').classList.remove('hidden');
+        el('creditosKpi').classList.remove('hidden');
+      }
+      calcular();
+    };
+
+    // Calcular
+    const calcular = () => {
+      const regime = el('regime').value;
+      const referencia = el('referencia').value.trim() || '-';
+      const receitaBruta = num(el('receitaBruta'));
+      const exclusoes = num(el('exclusoesBase'));
+      const base = Math.max(receitaBruta - exclusoes, 0);
+      const aliqPis = num(el('aliquotaPis'));
+      const aliqCofins = num(el('aliquotaCofins'));
+
+      const pisBruto = base * (aliqPis / 100);
+      const cofinsBruto = base * (aliqCofins / 100);
+      const totalBruto = pisBruto + cofinsBruto;
+
+      let totalCreditos = 0;
+      if (regime === 'naoCumulativo') {
+        totalCreditos = creditos.reduce((s, c) => s + (Number(c.valor) || 0), 0);
+      }
+
+      const creditoPis = totalBruto > 0 ? totalCreditos * (pisBruto / totalBruto) : 0;
+      const creditoCofins = totalBruto > 0 ? totalCreditos * (cofinsBruto / totalBruto) : 0;
+
+      const pis = Math.max(pisBruto - creditoPis, 0);
+      const cofins = Math.max(cofinsBruto - creditoCofins, 0);
+      const total = pis + cofins;
+
+      // Atualizar displays
+      el('destaquePis').textContent = pct(aliqPis);
+      el('destaqueCofins').textContent = pct(aliqCofins);
+
+      el('kpiReferencia').textContent = referencia;
+      el('kpiRegime').textContent = regime === 'naoCumulativo' ? 'Não Cumulativo' : 'Cumulativo';
+      el('resReceitaBruta').textContent = fmt(receitaBruta);
+      el('resBase').textContent = fmt(base);
+      el('resCreditos').textContent = fmt(totalCreditos);
+      el('resPis').textContent = fmt(pis);
+      el('resCofins').textContent = fmt(cofins);
+      el('resTotal').textContent = fmt(total);
+
+      el('basePisTabela').textContent = fmt(base);
+      el('baseCofinsTabela').textContent = fmt(base);
+      el('aliqPisTabela').textContent = pct(aliqPis);
+      el('aliqCofinsTabela').textContent = pct(aliqCofins);
+      el('creditoPisTabela').textContent = fmt(creditoPis);
+      el('creditoCofinsTabela').textContent = fmt(creditoCofins);
+      el('valorPisTabela').textContent = fmt(pis);
+      el('valorCofinsTabela').textContent = fmt(cofins);
+
+      const credTxt = regime === 'naoCumulativo' 
+        ? ` Créditos informados: ${fmt(totalCreditos)}, rateados proporcionalmente.`
+        : ' Sem abatimento de créditos no regime cumulativo.';
+
+      el('mensagemRegras').textContent = `Receita bruta: ${fmt(receitaBruta)} - exclusões: ${fmt(exclusoes)} = base: ${fmt(base)}. PIS (${pct(aliqPis)}): ${fmt(pisBruto)}. COFINS (${pct(aliqCofins)}): ${fmt(cofinsBruto)}.${credTxt}`;
+
+      el('saidaObservacoes').textContent = el('observacoes').value.trim() || 'Nenhuma observação informada.';
+    };
+
+    // Limpar
+    const limpar = () => {
+      el('referencia').value = '';
+      el('receitaBruta').value = '';
+      el('exclusoesBase').value = '0';
+      el('observacoes').value = '';
+      creditos = [];
+      renderCreditos();
+      updateRegime();
+    };
+
+    // Exportar CSV
+    const exportarCSV = () => {
+      const csv = `Conferência PIS e COFINS
+Referência,${el('kpiReferencia').textContent}
+Regime,${el('kpiRegime').textContent}
+Receita Bruta,${el('resReceitaBruta').textContent}
+Exclusões,${num(el('exclusoesBase'))}
+Base de Cálculo,${el('resBase').textContent}
+Alíquota PIS,${el('aliqPisTabela').textContent}
+Alíquota COFINS,${el('aliqCofinsTabela').textContent}
+Créditos,${el('resCreditos').textContent}
+PIS,${el('resPis').textContent}
+COFINS,${el('resCofins').textContent}
+Total,${el('resTotal').textContent}`;
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pis_cofins_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    // Event listeners
+    el('regime').addEventListener('change', updateRegime);
+    el('btnCalcular').addEventListener('click', calcular);
+    el('btnLimpar').addEventListener('click', limpar);
+    el('btnExcel').addEventListener('click', exportarCSV);
+    el('btnPdf').addEventListener('click', () => window.print());
+    el('btnAddCredito').addEventListener('click', () => {
+      const desc = el('creditoDescricao').value.trim() || 'Crédito';
+      const valor = Number(el('creditoValor').value || 0);
+      if (valor > 0) {
+        creditos.push({ descricao: desc, valor });
+        el('creditoDescricao').value = '';
+        el('creditoValor').value = '';
+        renderCreditos();
+        calcular();
+      }
+    });
+
+    ['receitaBruta', 'exclusoesBase', 'aliquotaPis', 'aliquotaCofins', 'referencia', 'observacoes'].forEach(id => {
+      el(id).addEventListener('input', calcular);
+    });
+
+    // Inicializar
+    updateRegime();
+    renderCreditos();
+    calcular();
+  </script>
+</body>
+</html>
